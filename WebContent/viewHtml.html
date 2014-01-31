@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>图片标注展示demo</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href="js/artDialog/skins/blue.css" rel="stylesheet" type="text/css" />
+    <style>
+        #markerTag li{
+            height: 40px;
+        }
+        .aui_content{
+            padding: 0 !important;
+            height: 100%;;
+            width: 100%;;
+        }
+    </style>
+    <script src="js/jquery/jquery-1.7.2.js"></script>
+    <script src="js/artDialog/jquery.artDialog.js"></script>
+    <script src="js/marker/marker.js"></script>
+    <script language="JavaScript">
+
+        $(function(){
+            $("#picture").marker({
+                markId:"markerTag"  ,
+                picUrl:"images/lighthouse.jpg" ,
+                url:"test.html",
+//                frame:true,
+//                isEdit:true,
+                markerUrl:"data.json",
+                picHeight:600 ,
+                popWidth:300,
+                cancelCallBack:function(){
+                    return false;
+                },
+                viewClick:function(obj,data){
+
+                    //todo 自行添加展示
+                    alert(data.link)
+                }
+            });
+        });
+
+
+    </script>
+</head>
+<body >
+
+<div >
+    <ul id="markerTag" style="float: left;width: 120px;">
+        <li >
+            <img src="images/tag.gif" style="cursor: pointer;" id="markerTag1">
+        </li>
+        <li>
+            <img src="images/ywlc_2.jpg">
+        </li>
+        <li>
+            <img src="images/ywlc_3.jpg" style="cursor: pointer;">
+        </li>
+        <li>
+            <img src="images/ywlc_4.jpg" style="cursor: pointer;">
+        </li>
+        <li>
+            <img src="images/ywlc_5.jpg" style="cursor: pointer;">
+        </li>
+    </ul>
+    <div id="picture" style="float: left" >
+    </div>
+</div>
+</body>
+</html>
