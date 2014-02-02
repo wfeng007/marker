@@ -1,13 +1,13 @@
 /**
- * 
+ *
  * Author: tianchungang
  * Date: 14-1-12
  * Time: 下午8:22
  */
 (function ($)
 {
-	
-	//这三个是？
+
+    //这三个是？
     var MarkerManager = {
         container:{}
     };
@@ -62,12 +62,12 @@
             g.createHtml(); //render界面
             g.initCursor(); //
             g.initEvent(); //增加交互用的事件
-            
+
             //
             if( p.markerUrl){ //
                 g.loadData();
             }
-            
+
             return this;
         },
         //创建界面的html元素
@@ -84,7 +84,7 @@
             htmlArr.push('<div  class="modal" style="position: absolute;z-index: 99;'+width+height+';left:0;float: left;top: 0;"></div>');
             g.getObj().html(htmlArr.join(""));
         },
-        
+
         //创建蒙版中的标注。(wrapper)生成一个div并放入标注的img对象picObj。
         //返回该标注对象
         addMarker:function(x,y,picObj){
@@ -92,13 +92,16 @@
             var g = this;
             var $picture = g.getObj();
             var $modal = $picture.find(".modal");//找到蒙版
-            var wrapper = $("<div style='position: absolute;'/>");
+            var wrapper = $("<div style='position: absolute;' class='marker'/>");
+            wrapper.bind("click",function(){
+                g.selectedMarker = wrapper;
+            }) ;
             wrapper.css({left: x,top: y});
             picObj.appendTo(wrapper);
             $modal.append(wrapper);
             if(p.isEdit){
-            	
-            	//编辑状态下包装成可dd的dom
+
+                //编辑状态下包装成可dd的dom
                 new Dragdrop({
                     target : wrapper[0] ,
                     area:[0,$picture.width()-wrapper.width(),0,$picture.height()-wrapper.height()]
@@ -106,7 +109,7 @@
             }
             return wrapper;
         },
-        
+
         //
         // 为界面元素增加操作事件功能
         //
@@ -126,20 +129,21 @@
                     var top = e.clientY-$modal.parent()[0].offsetTop;
                     //生成标注对象并包装标注图标
                     var wrapper = g.addMarker(left,top,target);
-                    g.setFlag( -1); 
-                    
+                    g.selectedMarker = wrapper;
+                    g.setFlag( -1);
+
                     $picture.css({cursor:"pointer"}); //鼠标样式复原
-                    
+
                     //标注对象模板的src作为事件的参数，为标注对象增加双击事件
-                    var url = target.attr("src"); 
+                    var url = target.attr("src");
                     var params = {x:left,y:top,url:url};
                     g.addDblEvent(wrapper,params); //为标注对象增加事件 （编辑模式时）
                 }
-                
+
             });
-            
+
         },
-        
+
         // 初始化标注对象模板工具
         initCursor:function(){
             var p = this.options;
@@ -158,7 +162,7 @@
                 }
             });
         },
-        
+
         //
         //获取数据
         loadData:function(){
@@ -169,7 +173,7 @@
                 url: p.markerUrl,
                 dataType:"json",
                 success:function(datas){
-                	
+
                     for(var i= 0;i<datas.length;i++){
                         var data = datas[i];
                         var $pic = $("<img src='"+data.url+"'/>") ;
@@ -188,7 +192,7 @@
                 }
             });
         },
-        
+
         //
         //可为标注对象增加双击事件
         //
@@ -197,7 +201,7 @@
             var g = this;
             var $picture = g.getObj();
             var $modal = $picture.find(".modal");
-            
+
             //标注对象的双击事件
             wrapper.dblclick(function(){
                 params.x = parseInt(wrapper.css("left"));
@@ -256,7 +260,7 @@
 
             })
         },
-        
+
         //获取url的地址
         getUrl:function(){
             var p = this.options;
@@ -267,7 +271,7 @@
                 return url +"?";
             }
         },
-        
+
         //用来获取设置标记板的状态，该状态是指用户点击标记对象模板后与一般状态的区别。-1标识一般状态 >0表示可以在标记板上单击增加标注。
         setFlag:function(value){
             this.flag = value;
@@ -275,14 +279,47 @@
         getFlag:function(){
             return this.flag;
         },
-        
+
         //用来获取设置jq对象，即标记板主体。
         setObj:function(obj){
             this.obj = obj;
         },
         getObj:function(){
             return this.obj;
+        },
+        /**
+         * 获取标注信息 ，返回JSON数组
+         * @return {Array}
+         */
+        getMarkerInfo:function(){
+            var ret = [];
+            var g = this;
+            var $picture = g.getObj();
+            var $modal = $picture.find(".modal");
+
+            var $markers = $(".marker",$modal);
+            var info;
+            var $marker;
+            for(var i=0;i<$markers.length;i++){
+                info = {};
+                $marker = $($markers[i]);
+                info.x = parseInt($marker.css("left"));
+                info.y = parseInt($marker.css("top"));
+                info.url = $marker.find("img").attr("src");
+                ret.push(info);
+            }
+            return ret;
+
+        },
+        deleteSelectedMarker:function(){
+            var g = this;
+            if(g.selectedMarker){
+                g.selectedMarker.remove();
+                g.selectedMarker = null;
+            }
+
         }
+
 
     };
 

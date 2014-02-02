@@ -18,9 +18,9 @@
     <script src="js/artDialog/jquery.artDialog.js"></script>
     <script src="js/marker/marker.js"></script>
     <script language="JavaScript">
-
+        var marker;
         $(function(){
-            $("#picture").marker({
+            marker = $("#picture").marker({
                 markId:"markerTag"  ,
                 picUrl:"images/lighthouse.jpg" ,
                 url:"test.html",
@@ -40,6 +40,13 @@
             });
         });
 
+        function getData(){
+            alert(JSON.stringify(marker.getMarkerInfo()));
+        }
+
+        function deleteMarker(){
+            marker.deleteSelectedMarker();
+        }
 
     </script>
 </head>
@@ -66,5 +73,8 @@
     <div id="picture" style="float: left" >
     </div>
 </div>
+
+<button onclick="getData()">获取标注数据</button>
+<button onclick="deleteMarker()">删除标注</button>
 </body>
 </html>
