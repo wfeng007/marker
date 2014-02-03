@@ -1,5 +1,7 @@
-[{
-  "x":20,"y":20,  "url":"images/tag.gif"
-},{
-    "x":90,"y":90,  "url":"images/tag.gif" ,"link":"http://www.baidu.com"
-}]
+{"marks":
+	[{
+	  "x":20,"y":20,  "url":"images/tag.gif","xp":0.05,"yp":0.06666666666666667
+	},{
+	    "x":90,"y":90,  "url":"images/tag.gif" ,"link":"http://www.baidu.com", "xp":0.225,"yp":0.3
+	}]
+}
